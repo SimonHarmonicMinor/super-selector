@@ -10,10 +10,6 @@ addons:
 script:
   - "./gradlew clean build jacocoTestReport sonarqube -x signArchives"
 
-branches:
-  only:
-    - master
-
 before_deploy:
   - openssl aes-256-cbc -K $encrypted_2afbb999f001_key -iv $encrypted_2afbb999f001_iv -in gradle.properties.enc -out gradle.properties -d
   - openssl aes-256-cbc -K $encrypted_c2f58914b0fd_key -iv $encrypted_c2f58914b0fd_iv -in secret-keys.gpg.enc -out secret-keys.gpg -d
