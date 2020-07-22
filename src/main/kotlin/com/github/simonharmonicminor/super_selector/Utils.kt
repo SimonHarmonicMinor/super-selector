@@ -1,6 +1,6 @@
 package com.github.simonharmonicminor.super_selector
 
-class CachedResult<T>(private val supplier: () -> T) {
+class CachedResult<out T>(private val supplier: () -> T) {
     private val cache = mutableListOf<T>()
 
     operator fun invoke(): T {
