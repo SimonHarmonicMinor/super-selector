@@ -2,6 +2,7 @@ package com.github.simonharmonicminor.super_selector.interpreter.lexeme
 
 import com.github.simonharmonicminor.super_selector.LexemeParsingException
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.FieldParserHandler
+import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.NumberParserHandler
 
 /**
  * Provides an ability to parse lexemes in the query string.
@@ -22,6 +23,12 @@ interface LexemeMachine {
     fun movedToNextLexeme(): LexemeMachine
 
     companion object {
-        fun of(query: String): LexemeMachine = LexemeMachineImpl(query, FieldParserHandler(null))
+        fun of(query: String): LexemeMachine =
+            LexemeMachineImpl(
+                query,
+                FieldParserHandler(
+                    NumberParserHandler()
+                )
+            )
     }
 }
