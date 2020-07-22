@@ -19,4 +19,8 @@ interface LexemeParser {
      * @throws LexemeParsingException if cannot move the pointer
      */
     fun movedToNextLexeme(): LexemeParser
+
+    companion object {
+        fun of(query: String): LexemeParser = LexemeParserImpl(query)
+    }
 }
