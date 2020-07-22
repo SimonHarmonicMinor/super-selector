@@ -8,6 +8,12 @@ import org.junit.jupiter.api.Assertions.*
 internal class LexemeMachineImplTest {
 
     @Test
+    fun throwsExceptionOnTryToPeekLexemeIfNothingIsPresent() {
+        val parser = LexemeMachine.of("")
+        assertThrows(LexemeParsingException::class.java) { parser.peekNextLexeme() }
+    }
+
+    @Test
     fun parseFieldNames() {
         var parser = LexemeMachine.of("one two three3 four")
 
