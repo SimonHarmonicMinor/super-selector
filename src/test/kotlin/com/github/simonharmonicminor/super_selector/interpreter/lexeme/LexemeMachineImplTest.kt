@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions.*
 internal class LexemeMachineImplTest {
 
     @Test
-    fun throwsExceptionOnTryToPeekLexemeIfNothingIsPresent() {
+    fun throwsLexemeParsingExceptionOnTryToPeekLexemeIfNothingIsPresent() {
         val parser = LexemeMachine.of("")
         assertThrows(LexemeParsingException::class.java) { parser.peekNextLexeme() }
     }
@@ -64,5 +64,51 @@ internal class LexemeMachineImplTest {
         assertEquals(LexemeType.NOT, notLexeme.lexemeType)
         assertEquals(LexemeType.IN, inLexeme.lexemeType)
         assertEquals(LexemeType.IS, isLexeme.lexemeType)
+    }
+
+    @Test
+    fun parseDecimalNumbers() {
+        var parser = LexemeMachine.of("10 231 199   \n 445")
+
+        val lexeme1 = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val lexeme2 = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val lexeme3 = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val lexeme4 = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+
+        assertEquals(LexemeType.DECIMAL, lexeme1.lexemeType)
+        assertEquals(10L, lexeme1.value)
+
+        assertEquals(LexemeType.DECIMAL, lexeme2.lexemeType)
+        assertEquals(231L, lexeme2.value)
+
+        assertEquals(LexemeType.DECIMAL, lexeme3.lexemeType)
+        assertEquals(199L, lexeme3.value)
+
+        assertEquals(LexemeType.DECIMAL, lexeme4.lexemeType)
+        assertEquals(445L, lexeme4.value)
+    }
+
+    @Test
+    fun parseDoubleNumbers() {
+        var parser = LexemeMachine.of("10.1 56.2 78.004")
+
+        val lexeme1 = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val lexeme2 = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val lexeme3 = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+
+        assertEquals(LexemeType.DOUBLE, lexeme1.lexemeType)
+        assertEquals(10.1, lexeme1.value)
+
+        assertEquals(LexemeType.DOUBLE, lexeme2.lexemeType)
+        assertEquals(56.2, lexeme2.value)
+
+        assertEquals(LexemeType.DOUBLE, lexeme3.lexemeType)
+        assertEquals(78.004, lexeme3.value)
+    }
+
+    @Test
+    fun throwsLexemeParsingExceptionIfFractionalPartAfterDotIsMissing() {
+        val parser = LexemeMachine.of("   \n\t 10013.  ")
+        assertThrows(LexemeParsingException::class.java) { parser.peekNextLexeme() }
     }
 }

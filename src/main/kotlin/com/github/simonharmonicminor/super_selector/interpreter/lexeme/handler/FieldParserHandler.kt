@@ -18,7 +18,7 @@ private val KEYWORDS = setOf(
     LexemeType.IN
 ).map { it.placeholder to it }.toMap()
 
-class FieldParserHandler(override val next: LexemeParserHandler?) : LexemeParserHandler() {
+class FieldParserHandler(override val next: LexemeParserHandler? = null) : LexemeParserHandler() {
 
     override fun innerParseLexeme(query: String, startIndex: Int): LexemeParsingResult? {
         if (query[startIndex].isLetter()) {
@@ -28,8 +28,14 @@ class FieldParserHandler(override val next: LexemeParserHandler?) : LexemeParser
             val nextIndex = startIndex + identifier.length
             val possibleKeyword = KEYWORDS[identifier.toLowerCase()]
             return possibleKeyword?.let {
-                LexemeParsingResult(Lexeme.of(it), nextIndex)
-            } ?: LexemeParsingResult(Lexeme.of(LexemeType.FIELD, identifier), nextIndex)
+                LexemeParsingResult(
+                    lexeme = Lexeme.of(it),
+                    nextIndex = nextIndex
+                )
+            } ?: LexemeParsingResult(
+                lexeme = Lexeme.of(LexemeType.FIELD, identifier),
+                nextIndex = nextIndex
+            )
         }
         return null
     }
