@@ -1,11 +1,38 @@
 package com.github.simonharmonicminor.super_selector
 
-import java.lang.RuntimeException
+import com.github.simonharmonicminor.super_selector.interpreter.Pointer
+import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
-class LexemeParsingException(message: String) : RuntimeException(message)
+class SinglePointerException(message: String) : RuntimeException(message)
+
+class LexemeParsingException(val pointer: Pointer, message: String) :
+    RuntimeException("Lexeme parsing error at line ${pointer.line} and column ${pointer.column}. $message") {
+
+    constructor(queryState: QueryState, message: String) : this(
+        pointer = queryState.pointer,
+        message = message
+    )
+}
 
 class QueryParsingException : RuntimeException {
-    constructor(message: String) : super(message)
+    val pointer: Pointer
 
-    constructor(message: String, cause: Throwable) : super(message, cause)
+    constructor(pointer: Pointer, message: String) : this(pointer, message, null)
+
+    constructor(message: String, cause: LexemeParsingException) : this(
+        cause.pointer,
+        message,
+        cause
+    )
+
+    private constructor(
+        pointer: Pointer,
+        message: String,
+        cause: LexemeParsingException?
+    ) : super(
+        "Grammar parsing error at line ${pointer.line} and column ${pointer.column}. $message",
+        cause
+    ) {
+        this.pointer = pointer
+    }
 }

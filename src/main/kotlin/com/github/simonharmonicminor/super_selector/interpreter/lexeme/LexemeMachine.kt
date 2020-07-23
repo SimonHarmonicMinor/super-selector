@@ -25,7 +25,7 @@ interface LexemeMachine {
     companion object {
         fun of(query: String): LexemeMachine =
             LexemeMachineImpl(
-                query,
+                QueryStateImpl(query),
                 FieldParserHandler(
                     NumberParserHandler()
                 )
