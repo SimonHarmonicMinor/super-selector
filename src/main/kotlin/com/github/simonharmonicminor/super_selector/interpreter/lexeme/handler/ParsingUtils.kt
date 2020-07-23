@@ -1,15 +1,21 @@
 package com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler
 
-private fun String.takeWhileIndexed(predicate: (Int, Char) -> Boolean): String {
-    val builder = StringBuilder()
-    for (i in this.indices) {
-        if (!predicate(i, this[i]))
-            break
-        builder.append(this[i])
-    }
-    return builder.toString()
-}
+import com.github.simonharmonicminor.super_selector.interpreter.Pointer
+import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
-fun collectCharsWhileConditionTrue(query: String, startIndex: Int, condition: (Int, Char) -> Boolean): String {
-    return query.substring(startIndex).takeWhileIndexed(condition)
+
+fun collectCharsWhileConditionTrue(
+    queryState: QueryState,
+    condition: (Pointer, Char) -> Boolean
+): Pair<String, QueryState> {
+    val builder = StringBuilder()
+    var localQueryState = queryState
+    val localCondition: (Pointer, Char?) -> Boolean = { pointer, ch ->
+        ch?.let { condition(pointer, ch) } ?: false
+    }
+    while (localCondition(localQueryState.pointer, localQueryState.currentChar)) {
+        builder.append(localQueryState.currentChar)
+        localQueryState = localQueryState.nextCharState()
+    }
+    return Pair(builder.toString(), localQueryState)
 }

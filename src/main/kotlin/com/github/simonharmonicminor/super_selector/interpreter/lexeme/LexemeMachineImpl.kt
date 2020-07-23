@@ -4,30 +4,29 @@ import com.github.simonharmonicminor.super_selector.CachedResult
 import com.github.simonharmonicminor.super_selector.LexemeParsingException
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.LexemeParserHandler
 
-internal class LexemeMachineImpl : LexemeMachine {
-    private val query: String
-    private val index: Int
-    private val nextLexemeRetriever: CachedResult<LexemeParsingResult>
+internal class LexemeMachineImpl(
+    private val queryState: QueryState,
     private val parserHandlersChain: LexemeParserHandler
+) : LexemeMachine {
+    private val nextLexemeRetriever: CachedResult<LexemeParsingResult>
 
-    constructor(query: String, parserHandlersChain: LexemeParserHandler) : this(query, 0, parserHandlersChain)
-
-    private constructor(query: String, index: Int, parserHandlersChain: LexemeParserHandler) {
-        this.query = query
-        this.index = index
+    init {
         nextLexemeRetriever = CachedResult {
             getNextLexeme()
         }
-        this.parserHandlersChain = parserHandlersChain
     }
 
     override fun peekNextLexeme() = nextLexemeRetriever().lexeme
 
-    override fun movedToNextLexeme() = LexemeMachineImpl(query, nextLexemeRetriever().nextIndex, parserHandlersChain)
+    override fun movedToNextLexeme() =
+        LexemeMachineImpl(nextLexemeRetriever().nextState, parserHandlersChain)
 
     private fun getNextLexeme(): LexemeParsingResult {
-        if (index >= query.length)
-            throw LexemeParsingException("Reached the end of the query. No more lexemes are available")
-        return parserHandlersChain.parseLexeme(query, index)
+        if (queryState.currentChar == null)
+            throw LexemeParsingException(
+                queryState,
+                "Reached the end of the query. No more lexemes are available"
+            )
+        return parserHandlersChain.parseLexeme(queryState)
     }
 }

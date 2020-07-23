@@ -3,6 +3,7 @@ package com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.Lexeme
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemeParsingResult
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemeType
+import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
 private val KEYWORDS = setOf(
     LexemeType.SELECT,
@@ -20,21 +21,16 @@ private val KEYWORDS = setOf(
 
 class FieldParserHandler(override val next: LexemeParserHandler? = null) : LexemeParserHandler() {
 
-    override fun innerParseLexeme(query: String, startIndex: Int): LexemeParsingResult? {
-        if (query[startIndex].isLetter()) {
-            val identifier = collectCharsWhileConditionTrue(query, startIndex) { _, ch ->
+    override fun innerParseLexeme(queryState: QueryState): LexemeParsingResult? {
+        if (queryState.currentChar?.isLetter() == true) {
+            val (identifier, afterIdentifierState) = collectCharsWhileConditionTrue(queryState) { _, ch ->
                 ch.isLetter() || ch.isDigit()
             }
-            val nextIndex = startIndex + identifier.length
             val possibleKeyword = KEYWORDS[identifier.toLowerCase()]
-            return possibleKeyword?.let {
-                LexemeParsingResult(
-                    lexeme = Lexeme.of(it),
-                    nextIndex = nextIndex
-                )
-            } ?: LexemeParsingResult(
-                lexeme = Lexeme.of(LexemeType.FIELD, identifier),
-                nextIndex = nextIndex
+            val lexemeType = possibleKeyword ?: LexemeType.FIELD
+            return LexemeParsingResult(
+                lexeme = Lexeme.of(lexemeType, queryState.pointer, identifier),
+                nextState = afterIdentifierState
             )
         }
         return null
