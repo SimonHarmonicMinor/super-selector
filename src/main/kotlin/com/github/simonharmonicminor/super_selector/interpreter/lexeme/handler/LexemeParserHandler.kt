@@ -6,8 +6,7 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryStat
 
 private val IGNORED_SYMBOLS = setOf(' ', '\t', '\n', '\r')
 
-abstract class LexemeParserHandler {
-    protected abstract val next: LexemeParserHandler?
+abstract class LexemeParserHandler(private val next: LexemeParserHandler?) {
 
     protected abstract fun innerParseLexeme(queryState: QueryState): LexemeParsingResult?
 

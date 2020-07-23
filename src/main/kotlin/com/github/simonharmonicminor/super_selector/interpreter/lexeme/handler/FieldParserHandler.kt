@@ -19,7 +19,7 @@ private val KEYWORDS = setOf(
     LexemeType.IN
 ).map { it.placeholder to it }.toMap()
 
-class FieldParserHandler(override val next: LexemeParserHandler? = null) : LexemeParserHandler() {
+class FieldParserHandler(next: LexemeParserHandler?) : LexemeParserHandler(next) {
 
     override fun innerParseLexeme(queryState: QueryState): LexemeParsingResult? {
         if (queryState.currentChar?.isLetter() == true) {
