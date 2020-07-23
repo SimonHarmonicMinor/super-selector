@@ -164,4 +164,23 @@ internal class LexemeMachineImplTest {
             assertEquals(3, e.pointer.column)
         }
     }
+
+    @Test
+    fun parseComparingOperators() {
+        var parser = LexemeMachine.of(" <   <=  \n\t =   != > >=")
+
+        val lt = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val le = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val eq = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val notEq = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val gt = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val ge = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+
+        assertEquals(LexemeType.LT, lt.lexemeType)
+        assertEquals(LexemeType.LE, le.lexemeType)
+        assertEquals(LexemeType.EQ, eq.lexemeType)
+        assertEquals(LexemeType.NOT_EQ, notEq.lexemeType)
+        assertEquals(LexemeType.GT, gt.lexemeType)
+        assertEquals(LexemeType.GE, ge.lexemeType)
+    }
 }

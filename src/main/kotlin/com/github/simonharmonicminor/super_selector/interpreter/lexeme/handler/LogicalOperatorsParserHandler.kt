@@ -8,24 +8,16 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryStat
 
 class LogicalOperatorsParserHandler(next: LexemeParserHandler?) : LexemeParserHandler(next) {
     override fun innerParseLexeme(queryState: QueryState): LexemeParsingResult? {
-        val pair = when (queryState.currentChar) {
-            '&' -> Pair('&', LexemeType.AND)
-            '|' -> Pair('|', LexemeType.OR)
-            '!' -> Pair(null, LexemeType.DENY)
-            else -> null
-        }
-        val potentialNextState = queryState.nextCharState()
-        return pair?.let { (ch, lexemeType) ->
-            val nextQueryState = ch?.let {
-                if (potentialNextState.currentChar != it) {
-                    throw LexemeParsingException(potentialNextState, "Expected '$it' character")
-                }
-                potentialNextState.nextCharState()
-            } ?: potentialNextState
+        val ch = queryState.currentChar
+        return if (ch == '&' || ch == '|') {
+            val next = queryState.nextCharState()
+            if (next.currentChar != ch)
+                throw LexemeParsingException(next, "Expected '$ch'")
+            val lexemeType = if (ch == '&') LexemeType.AND else LexemeType.OR
             LexemeParsingResult(
-                lexeme = Lexeme.of(lexemeType = lexemeType, pointer = nextQueryState.pointer),
-                nextState = nextQueryState
+                lexeme = Lexeme.of(lexemeType, pointer = queryState.pointer),
+                nextState = next.nextCharState()
             )
-        }
+        } else null
     }
 }

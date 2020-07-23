@@ -1,10 +1,7 @@
 package com.github.simonharmonicminor.super_selector.interpreter.lexeme
 
 import com.github.simonharmonicminor.super_selector.LexemeParsingException
-import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.BracketsParserHandler
-import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.FieldParserHandler
-import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.LogicalOperatorsParserHandler
-import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.NumberParserHandler
+import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.*
 
 /**
  * Provides an ability to parse lexemes in the query string.
@@ -31,7 +28,9 @@ interface LexemeMachine {
                 NumberParserHandler(
                     BracketsParserHandler(
                         FieldParserHandler(
-                            LogicalOperatorsParserHandler(null)
+                            LogicalOperatorsParserHandler(
+                                ComparingOperatorsHandler(null)
+                            )
                         )
                     )
                 )
