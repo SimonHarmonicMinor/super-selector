@@ -3,6 +3,7 @@ package com.github.simonharmonicminor.super_selector.interpreter.lexeme
 import com.github.simonharmonicminor.super_selector.LexemeParsingException
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.BracketsParserHandler
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.FieldParserHandler
+import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.LogicalOperatorsParserHandler
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.NumberParserHandler
 
 /**
@@ -29,7 +30,9 @@ interface LexemeMachine {
                 QueryStateImpl(query),
                 NumberParserHandler(
                     BracketsParserHandler(
-                        FieldParserHandler(null)
+                        FieldParserHandler(
+                            LogicalOperatorsParserHandler(null)
+                        )
                     )
                 )
             )

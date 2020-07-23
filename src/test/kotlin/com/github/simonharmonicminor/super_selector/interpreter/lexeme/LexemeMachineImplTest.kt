@@ -1,6 +1,7 @@
 package com.github.simonharmonicminor.super_selector.interpreter.lexeme
 
 import com.github.simonharmonicminor.super_selector.LexemeParsingException
+import com.github.simonharmonicminor.super_selector.interpreter.Pointer
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -125,5 +126,42 @@ internal class LexemeMachineImplTest {
         assertEquals(LexemeType.RIGHT_SQUARE_BRACKET, rightSquareBracket.lexemeType)
         assertEquals(LexemeType.LEFT_ROUND_BRACKET, leftRoundBracket.lexemeType)
         assertEquals(LexemeType.RIGHT_ROUND_BRACKET, rightRoundBracket.lexemeType)
+    }
+
+    @Test
+    fun parseLogicalOperators() {
+        var parser = LexemeMachine.of("!  &&  ||")
+
+        val deny = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val and = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val or = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+
+        assertEquals(LexemeType.DENY, deny.lexemeType)
+        assertEquals(LexemeType.AND, and.lexemeType)
+        assertEquals(LexemeType.OR, or.lexemeType)
+    }
+
+    @Test
+    fun throwsExceptionIfAndOperatorIsIncomplete() {
+        val parser = LexemeMachine.of("  \n \n     & ")
+        try {
+            parser.peekNextLexeme()
+            assert(false)
+        } catch (e: LexemeParsingException) {
+            assertEquals(3, e.pointer.line)
+            assertEquals(7, e.pointer.column)
+        }
+    }
+
+    @Test
+    fun throwsExceptionIfOrOperatorIsIncomplete() {
+        val parser = LexemeMachine.of("  \n |  ")
+        try {
+            parser.peekNextLexeme()
+            assert(false)
+        } catch (e: LexemeParsingException) {
+            assertEquals(2, e.pointer.line)
+            assertEquals(3, e.pointer.column)
+        }
     }
 }
