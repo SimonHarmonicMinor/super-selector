@@ -1,14 +1,13 @@
 package com.github.simonharmonicminor.super_selector.interpreter.lexeme
 
 import com.github.simonharmonicminor.super_selector.interpreter.Pointer
-import com.github.simonharmonicminor.super_selector.interpreter.SinglePointer
 
 internal class QueryStateImpl : QueryState {
     private val queryRows: List<String>
     private val lineIndex: Int
     private val columnIndex: Int
     override val pointer: Pointer
-        get() = Pointer(line = SinglePointer(lineIndex), column = SinglePointer(columnIndex))
+        get() = Pointer(lineIndex = lineIndex, columnIndex = columnIndex)
     override val currentChar: Char?
         get() = queryRows.getOrElse(lineIndex) { "" }.getOrNull(columnIndex)
 

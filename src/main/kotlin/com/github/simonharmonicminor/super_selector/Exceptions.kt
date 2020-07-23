@@ -3,7 +3,7 @@ package com.github.simonharmonicminor.super_selector
 import com.github.simonharmonicminor.super_selector.interpreter.Pointer
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
-class SinglePointerException(message: String) : RuntimeException(message)
+class PointerException(message: String) : RuntimeException(message)
 
 class LexemeParsingException(val pointer: Pointer, message: String) :
     RuntimeException("Lexeme parsing error at line ${pointer.line} and column ${pointer.column}. $message") {
