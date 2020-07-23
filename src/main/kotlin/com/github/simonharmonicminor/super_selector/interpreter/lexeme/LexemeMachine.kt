@@ -29,7 +29,9 @@ interface LexemeMachine {
                     BracketsParserHandler(
                         FieldParserHandler(
                             LogicalOperatorsParserHandler(
-                                ComparingOperatorsHandler(null)
+                                ComparingOperatorsHandler(
+                                    StringParserHandler(null)
+                                )
                             )
                         )
                     )

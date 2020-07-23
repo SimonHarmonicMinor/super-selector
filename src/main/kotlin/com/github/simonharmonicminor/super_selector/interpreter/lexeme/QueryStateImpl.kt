@@ -22,7 +22,7 @@ internal class QueryStateImpl : QueryState {
     override fun nextCharState(): QueryState {
         if (currentChar == null)
             return this
-        if (columnIndex + 1 < queryRows[lineIndex].length)
+        if (columnIndex + 1 < queryRows[lineIndex].length || lineIndex == queryRows.size - 1)
             return QueryStateImpl(queryRows, lineIndex, columnIndex + 1)
         return QueryStateImpl(queryRows, lineIndex + 1, 0)
     }
