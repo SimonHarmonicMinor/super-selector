@@ -1,6 +1,7 @@
 package com.github.simonharmonicminor.super_selector.interpreter.lexeme
 
 import com.github.simonharmonicminor.super_selector.LexemeParsingException
+import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.BracketsParserHandler
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.FieldParserHandler
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.NumberParserHandler
 
@@ -26,8 +27,10 @@ interface LexemeMachine {
         fun of(query: String): LexemeMachine =
             LexemeMachineImpl(
                 QueryStateImpl(query),
-                FieldParserHandler(
-                    NumberParserHandler()
+                NumberParserHandler(
+                    BracketsParserHandler(
+                        FieldParserHandler(null)
+                    )
                 )
             )
     }

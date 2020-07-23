@@ -111,4 +111,19 @@ internal class LexemeMachineImplTest {
         val parser = LexemeMachine.of("   \n\t 10013.  ")
         assertThrows(LexemeParsingException::class.java) { parser.peekNextLexeme() }
     }
+
+    @Test
+    fun parseBrackets() {
+        var parser = LexemeMachine.of(" \n\t\r  [ ]  (  ) ")
+
+        val leftSquareBracket = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val rightSquareBracket = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val leftRoundBracket = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val rightRoundBracket = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+
+        assertEquals(LexemeType.LEFT_SQUARE_BRACKET, leftSquareBracket.lexemeType)
+        assertEquals(LexemeType.RIGHT_SQUARE_BRACKET, rightSquareBracket.lexemeType)
+        assertEquals(LexemeType.LEFT_ROUND_BRACKET, leftRoundBracket.lexemeType)
+        assertEquals(LexemeType.RIGHT_ROUND_BRACKET, rightRoundBracket.lexemeType)
+    }
 }
