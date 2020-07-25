@@ -5,23 +5,9 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemePar
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemeType
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
-private val KEYWORDS = setOf(
-    LexemeType.SELECT,
-    LexemeType.WHERE,
-    LexemeType.ORDER,
-    LexemeType.BY,
-    LexemeType.ASC,
-    LexemeType.DESC,
-    LexemeType.TRUE,
-    LexemeType.FALSE,
-    LexemeType.NOT,
-    LexemeType.IS,
-    LexemeType.IN
-).map { it.placeholder to it }.toMap()
 
-class FieldParserHandler(next: LexemeParserHandler?) : LexemeParserHandler(next) {
-
-    override fun innerParseLexeme(queryState: QueryState): LexemeParsingResult? {
+class FieldParser : LexemeParser {
+    override fun parseLexeme(queryState: QueryState): LexemeParsingResult? {
         if (queryState.currentChar?.isLetter() == true) {
             val (identifier, afterIdentifierState) = collectCharsWhileConditionTrue(queryState) { _, ch ->
                 ch.isLetter() || ch.isDigit()
@@ -34,5 +20,21 @@ class FieldParserHandler(next: LexemeParserHandler?) : LexemeParserHandler(next)
             )
         }
         return null
+    }
+
+    companion object {
+        private val KEYWORDS = setOf(
+            LexemeType.SELECT,
+            LexemeType.WHERE,
+            LexemeType.ORDER,
+            LexemeType.BY,
+            LexemeType.ASC,
+            LexemeType.DESC,
+            LexemeType.TRUE,
+            LexemeType.FALSE,
+            LexemeType.NOT,
+            LexemeType.IS,
+            LexemeType.IN
+        ).map { it.placeholder to it }.toMap()
     }
 }

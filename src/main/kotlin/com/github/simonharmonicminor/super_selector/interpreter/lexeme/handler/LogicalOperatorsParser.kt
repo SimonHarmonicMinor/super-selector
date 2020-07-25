@@ -6,8 +6,8 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemePar
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemeType
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
-class LogicalOperatorsParserHandler(next: LexemeParserHandler?) : LexemeParserHandler(next) {
-    override fun innerParseLexeme(queryState: QueryState): LexemeParsingResult? {
+class LogicalOperatorsParser : LexemeParser {
+    override fun parseLexeme(queryState: QueryState): LexemeParsingResult? {
         val ch = queryState.currentChar
         return if (ch == '&' || ch == '|') {
             val next = queryState.nextCharState()

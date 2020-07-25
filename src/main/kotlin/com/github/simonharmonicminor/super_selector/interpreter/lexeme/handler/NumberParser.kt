@@ -7,10 +7,10 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemePar
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemeType
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
-class NumberParserHandler(next: LexemeParserHandler?) : LexemeParserHandler(next) {
+class NumberParser : LexemeParser {
     private val digitsCollectingCondition: (Pointer, Char) -> Boolean = { _, ch -> ch.isDigit() }
 
-    override fun innerParseLexeme(queryState: QueryState): LexemeParsingResult? {
+    override fun parseLexeme(queryState: QueryState): LexemeParsingResult? {
         if (queryState.currentChar?.isDigit() == true) {
             val (decimalPart, dotQueryState) = collectCharsWhileConditionTrue(queryState, digitsCollectingCondition)
             if (dotQueryState.currentChar != '.') {

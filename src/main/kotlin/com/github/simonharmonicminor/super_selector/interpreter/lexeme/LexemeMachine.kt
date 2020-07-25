@@ -25,14 +25,13 @@ interface LexemeMachine {
         fun of(query: String): LexemeMachine =
             LexemeMachineImpl(
                 QueryStateImpl(query),
-                NumberParserHandler(
-                    BracketsParserHandler(
-                        FieldParserHandler(
-                            LogicalOperatorsParserHandler(
-                                ComparingOperatorsHandler(null)
-                            )
-                        )
-                    )
+                LexemeParsersContainer(
+                    NumberParser(),
+                    BracketsParser(),
+                    FieldParser(),
+                    LogicalOperatorsParser(),
+                    ComparingOperators(),
+                    StringParser()
                 )
             )
     }

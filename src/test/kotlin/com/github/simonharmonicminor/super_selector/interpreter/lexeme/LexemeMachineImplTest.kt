@@ -155,7 +155,7 @@ internal class LexemeMachineImplTest {
 
     @Test
     fun throwsExceptionIfOrOperatorIsIncomplete() {
-        val parser = LexemeMachine.of("  \n |  ")
+        val parser = LexemeMachine.of("  \n |")
         try {
             parser.peekNextLexeme()
             assert(false)
@@ -182,5 +182,47 @@ internal class LexemeMachineImplTest {
         assertEquals(LexemeType.NOT_EQ, notEq.lexemeType)
         assertEquals(LexemeType.GT, gt.lexemeType)
         assertEquals(LexemeType.GE, ge.lexemeType)
+    }
+
+    @Test
+    fun parseSimpleStrings() {
+        val firstString = "first\"String"
+        val secondString = "second'String"
+        var parser = LexemeMachine.of(" '$firstString' \"$secondString\" ")
+
+        val firstStringLexeme = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+        val secondStringLexeme = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
+
+        assertEquals(LexemeType.STRING, firstStringLexeme.lexemeType)
+        assertEquals(firstString, firstStringLexeme.value)
+
+        assertEquals(LexemeType.STRING, secondStringLexeme.lexemeType)
+        assertEquals(secondString, secondStringLexeme.value)
+    }
+
+    @Test
+    fun throwsExceptionIfSingleQuoteStringHasNotBeenClosed() {
+        val parser = LexemeMachine.of("   'str  ")
+
+        try {
+            parser.peekNextLexeme()
+            assert(false)
+        } catch (e: LexemeParsingException) {
+            assertEquals(1, e.pointer.line)
+            assertEquals(10, e.pointer.column)
+        }
+    }
+
+    @Test
+    fun throwsExceptionIfDoubleQuoteStringHasNotBeenClosed() {
+        val parser = LexemeMachine.of("   \"str  ")
+
+        try {
+            parser.peekNextLexeme()
+            assert(false)
+        } catch (e: LexemeParsingException) {
+            assertEquals(1, e.pointer.line)
+            assertEquals(10, e.pointer.column)
+        }
     }
 }
