@@ -6,12 +6,14 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemePar
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemeType
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
-class StringParserHandler(next: LexemeParserHandler?) : LexemeParserHandler(next) {
-    override fun innerParseLexeme(queryState: QueryState): LexemeParsingResult? {
+class StringParser : LexemeParser {
+    override fun parseLexeme(queryState: QueryState): LexemeParsingResult? {
         val strStartCh = queryState.currentChar
         if (strStartCh != '\'' && strStartCh != '"')
             return null
-        val (str, nextState) = collectCharsWhileConditionTrue(queryState.nextCharState()) { _, ch -> ch != strStartCh }
+        val (str, nextState) = collectCharsWhileConditionTrue(queryState.nextCharState()) { _, ch ->
+            ch != strStartCh
+        }
         if (nextState.currentChar != strStartCh)
             throw LexemeParsingException(nextState, "Expected $strStartCh character to enclose the string literal")
         return LexemeParsingResult(

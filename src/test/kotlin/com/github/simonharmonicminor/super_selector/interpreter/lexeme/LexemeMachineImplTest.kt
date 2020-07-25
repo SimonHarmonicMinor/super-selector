@@ -207,8 +207,7 @@ internal class LexemeMachineImplTest {
         try {
             parser.peekNextLexeme()
             assert(false)
-        }
-        catch (e: LexemeParsingException) {
+        } catch (e: LexemeParsingException) {
             assertEquals(1, e.pointer.line)
             assertEquals(10, e.pointer.column)
         }
@@ -221,8 +220,7 @@ internal class LexemeMachineImplTest {
         try {
             parser.peekNextLexeme()
             assert(false)
-        }
-        catch (e: LexemeParsingException) {
+        } catch (e: LexemeParsingException) {
             assertEquals(1, e.pointer.line)
             assertEquals(10, e.pointer.column)
         }

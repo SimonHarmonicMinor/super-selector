@@ -5,8 +5,8 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemePar
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemeType
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
-class BracketsParserHandler(next: LexemeParserHandler?) : LexemeParserHandler(next) {
-    override fun innerParseLexeme(queryState: QueryState): LexemeParsingResult? {
+class BracketsParser : LexemeParser {
+    override fun parseLexeme(queryState: QueryState): LexemeParsingResult? {
         return when (queryState.currentChar) {
             '(' -> LexemeType.LEFT_ROUND_BRACKET
             ')' -> LexemeType.RIGHT_ROUND_BRACKET

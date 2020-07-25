@@ -2,11 +2,11 @@ package com.github.simonharmonicminor.super_selector.interpreter.lexeme
 
 import com.github.simonharmonicminor.super_selector.CachedResult
 import com.github.simonharmonicminor.super_selector.LexemeParsingException
-import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.LexemeParserHandler
+import com.github.simonharmonicminor.super_selector.interpreter.lexeme.handler.LexemeParsersContainer
 
 internal class LexemeMachineImpl(
     private val queryState: QueryState,
-    private val parserHandlersChain: LexemeParserHandler
+    private val lexemeParsersContainer: LexemeParsersContainer
 ) : LexemeMachine {
     private val nextLexemeRetriever: CachedResult<LexemeParsingResult>
 
@@ -19,7 +19,7 @@ internal class LexemeMachineImpl(
     override fun peekNextLexeme() = nextLexemeRetriever().lexeme
 
     override fun movedToNextLexeme() =
-        LexemeMachineImpl(nextLexemeRetriever().nextState, parserHandlersChain)
+        LexemeMachineImpl(nextLexemeRetriever().nextState, lexemeParsersContainer)
 
     private fun getNextLexeme(): LexemeParsingResult {
         if (queryState.currentChar == null)
@@ -27,6 +27,6 @@ internal class LexemeMachineImpl(
                 queryState,
                 "Reached the end of the query. No more lexemes are available"
             )
-        return parserHandlersChain.parseLexeme(queryState)
+        return lexemeParsersContainer.parseLexeme(queryState)
     }
 }
