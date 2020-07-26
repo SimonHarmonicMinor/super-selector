@@ -306,4 +306,15 @@ internal class LexemeMachineImplTest {
         val parser = LexemeMachine.of("   @14.02.1993 23:33:10 +15-23@  ")
         assertThrows(LexemeParsingException::class.java) { parser.peekNextLexeme() }
     }
+
+    @Test
+    fun throwsExceptionIfStuckIntoUnexpectedCharacter() {
+        val parser = LexemeMachine.of(" > < = $ ")
+        assertThrows(LexemeParsingException::class.java) {
+            parser.movedToNextLexeme()
+                .movedToNextLexeme()
+                .movedToNextLexeme()
+                .peekNextLexeme()
+        }
+    }
 }
