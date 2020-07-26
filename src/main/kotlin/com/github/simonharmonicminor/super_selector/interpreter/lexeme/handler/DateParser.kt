@@ -5,9 +5,7 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.Lexeme
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemeParsingResult
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemeType
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
+import java.time.*
 import java.time.format.DateTimeFormatter
 
 class DateParser : LexemeParser {
@@ -53,33 +51,59 @@ class DateParser : LexemeParser {
 
     private fun parseLocalDateTime(localDateTimeString: String): LocalDateTime? {
         val localDateTimeParts = localDateTimeString.split(" ")
-        if (localDateTimeParts.size != 2)
-            return null
-        val (datePart, timePart) = localDateTimeParts
-        if (!dateTimePartsMatchesThePatterns(datePart, timePart))
-            return null
-        return buildLocalDateTime(datePart, timePart)
+        if (localDateTimeParts.size == 2) {
+            val (datePart, timePart) = localDateTimeParts
+            if (!dateTimePartsMatchesThePatterns(datePart, timePart))
+                return null
+            return buildLocalDateTime(datePart, timePart)
+        } else if (localDateTimeParts.size == 1) {
+            val (datePart) = localDateTimeParts
+            if (!datePartMatchesThePattern(datePart))
+                return null
+            return LocalDateTime.of(buildLocalDate(datePart), LocalTime.MIN)
+        }
+        return null
     }
 
     private fun dateTimePartsMatchesThePatterns(datePart: String, timePart: String): Boolean {
-        return DATE_PATTERN.matches(datePart) &&
+        return datePartMatchesThePattern(datePart) &&
                 (TIME_MINUTES_PATTERN.matches(timePart) || TIME_SECONDS_PATTERN.matches(timePart))
+    }
+
+    private fun datePartMatchesThePattern(datePart: String): Boolean {
+        return DATE_PATTERN.matches(datePart)
+    }
+
+    private fun buildLocalDate(datePart: String): LocalDate {
+        return LocalDate.parse(datePart, getLocalDateFormatter())
     }
 
     private fun buildLocalDateTime(datePart: String, timePart: String): LocalDateTime {
         val timeFormat =
             if (TIME_MINUTES_PATTERN.matches(timePart))
-                "hh:mm"
+                "HH:mm"
             else
-                "hh:mm:ss"
-        return LocalDateTime.parse("$datePart $timePart", DateTimeFormatter.ofPattern("dd.MM.yyyy $timeFormat"))
+                "HH:mm:ss"
+        return LocalDateTime.parse("$datePart $timePart", getLocalDateTimeFormatter(timeFormat))
+    }
+
+    private fun getLocalDateTimeFormatter(timeFormat: String): DateTimeFormatter {
+        return DateTimeFormatter.ofPattern("${getLocalDatePattern()} $timeFormat")
+    }
+
+    private fun getLocalDateFormatter(): DateTimeFormatter {
+        return DateTimeFormatter.ofPattern(getLocalDatePattern())
+    }
+
+    private fun getLocalDatePattern(): String {
+        return "dd.MM.yyyy"
     }
 
     companion object {
-        private val DATE_PATTERN = Regex.fromLiteral("\\d{2}.\\d{2}.\\d{4}")
-        private val TIME_MINUTES_PATTERN = Regex.fromLiteral("\\d{2}:\\d{2}")
-        private val TIME_SECONDS_PATTERN = Regex.fromLiteral("\\d{2}:\\d{2}:\\d{2}")
-        private val TIME_ZONE_PATTERN = Regex.fromLiteral("(\\+\\-)\\d{2}:\\d{2}")
+        private val DATE_PATTERN = "\\d{2}\\.\\d{2}\\.\\d{4}".toRegex()
+        private val TIME_MINUTES_PATTERN = "\\d{2}:\\d{2}".toRegex()
+        private val TIME_SECONDS_PATTERN = "\\d{2}:\\d{2}:\\d{2}".toRegex()
+        private val TIME_ZONE_PATTERN = "([+\\-])\\d{2}:\\d{2}".toRegex()
 
         private val AVAILABLE_PATTERN_PLACEHOLDERS = listOf(
             "DD.MM.YYYY",

@@ -31,7 +31,8 @@ interface LexemeMachine {
                     FieldParser(),
                     LogicalOperatorsParser(),
                     ComparingOperators(),
-                    StringParser()
+                    StringParser(),
+                    DateParser()
                 )
             )
     }
