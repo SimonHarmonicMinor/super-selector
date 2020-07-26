@@ -65,18 +65,13 @@ class DateParser : LexemeParser {
         return null
     }
 
-    private fun dateTimePartsMatchesThePatterns(datePart: String, timePart: String): Boolean {
-        return datePartMatchesThePattern(datePart) &&
+    private fun dateTimePartsMatchesThePatterns(datePart: String, timePart: String) =
+        datePartMatchesThePattern(datePart) &&
                 (TIME_MINUTES_PATTERN.matches(timePart) || TIME_SECONDS_PATTERN.matches(timePart))
-    }
 
-    private fun datePartMatchesThePattern(datePart: String): Boolean {
-        return DATE_PATTERN.matches(datePart)
-    }
+    private fun datePartMatchesThePattern(datePart: String) = DATE_PATTERN.matches(datePart)
 
-    private fun buildLocalDate(datePart: String): LocalDate {
-        return LocalDate.parse(datePart, getLocalDateFormatter())
-    }
+    private fun buildLocalDate(datePart: String) = LocalDate.parse(datePart, getLocalDateFormatter())
 
     private fun buildLocalDateTime(datePart: String, timePart: String): LocalDateTime {
         val timeFormat =
@@ -87,17 +82,12 @@ class DateParser : LexemeParser {
         return LocalDateTime.parse("$datePart $timePart", getLocalDateTimeFormatter(timeFormat))
     }
 
-    private fun getLocalDateTimeFormatter(timeFormat: String): DateTimeFormatter {
-        return DateTimeFormatter.ofPattern("${getLocalDatePattern()} $timeFormat")
-    }
+    private fun getLocalDateTimeFormatter(timeFormat: String) =
+        DateTimeFormatter.ofPattern("${getLocalDatePattern()} $timeFormat")
 
-    private fun getLocalDateFormatter(): DateTimeFormatter {
-        return DateTimeFormatter.ofPattern(getLocalDatePattern())
-    }
+    private fun getLocalDateFormatter() = DateTimeFormatter.ofPattern(getLocalDatePattern())
 
-    private fun getLocalDatePattern(): String {
-        return "dd.MM.yyyy"
-    }
+    private fun getLocalDatePattern() = "dd.MM.yyyy"
 
     companion object {
         private val DATE_PATTERN = "\\d{2}\\.\\d{2}\\.\\d{4}".toRegex()

@@ -11,11 +11,17 @@ class NumberParser : LexemeParser {
     private val digitsCollectingCondition: (Pointer, Char) -> Boolean = { _, ch -> ch.isDigit() }
 
     override fun parseLexeme(queryState: QueryState): LexemeParsingResult? {
-        if (queryState.currentChar?.isDigit() == true) {
-            val (decimalPart, dotQueryState) = collectCharsWhileConditionTrue(queryState, digitsCollectingCondition)
+        val ch = queryState.currentChar
+        if (ch?.isDigit() == true || ch == '-') {
+            val (sign, nextState) =
+                if (ch == '-')
+                    Pair(-1, queryState.nextCharState())
+                else
+                    Pair(1, queryState)
+            val (decimalPart, dotQueryState) = collectCharsWhileConditionTrue(nextState, digitsCollectingCondition)
             if (dotQueryState.currentChar != '.') {
                 return LexemeParsingResult(
-                    lexeme = Lexeme.of(LexemeType.DECIMAL, queryState.pointer, decimalPart.toLong()),
+                    lexeme = Lexeme.of(LexemeType.DECIMAL, queryState.pointer, decimalPart.toLong() * sign),
                     nextState = dotQueryState
                 )
             }
@@ -31,7 +37,7 @@ class NumberParser : LexemeParser {
                 lexeme = Lexeme.of(
                     LexemeType.DOUBLE,
                     queryState.pointer,
-                    "${decimalPart}.${fractionalPart}".toDouble()
+                    "${decimalPart}.${fractionalPart}".toDouble() * sign
                 ),
                 nextState = afterDoubleNumberState
             )

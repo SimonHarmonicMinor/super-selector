@@ -15,9 +15,12 @@ class LexemeParsersContainer(private vararg val handlers: LexemeParser) {
             if (result != null)
                 return result
         }
+        val message = localQueryState.currentChar?.let {
+            "Unexpected character: $it"
+        } ?: "Reached the end of the query. No more lexemes are available"
         throw LexemeParsingException(
             localQueryState,
-            "Unexpected end of the query"
+            message
         )
     }
 
