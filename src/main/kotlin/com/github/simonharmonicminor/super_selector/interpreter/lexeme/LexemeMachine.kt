@@ -30,7 +30,7 @@ interface LexemeMachine {
                     BracketsParser(),
                     FieldParser(),
                     LogicalOperatorsParser(),
-                    ComparingOperators(),
+                    ComparingOperatorsParser(),
                     StringParser(),
                     DateParser()
                 )
