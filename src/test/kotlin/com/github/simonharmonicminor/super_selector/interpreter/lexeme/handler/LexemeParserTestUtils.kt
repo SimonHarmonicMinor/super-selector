@@ -30,8 +30,15 @@ object LexemeParserTestUtils {
     }
 
     private fun getQueryStateMock(chars: CharArray, index: Int): QueryState {
-        if (index >= chars.size)
-            return mock()
+        if (index >= chars.size) {
+            val next = mock<QueryState> {
+                on { pointer }.thenReturn(Pointer(1, 1))
+            }
+            whenever(next.nextCharState())
+                .thenReturn(next)
+            return next
+        }
+
         val queryState = mock<QueryState>()
         whenever(queryState.pointer)
             .thenReturn(Pointer(1, 1))

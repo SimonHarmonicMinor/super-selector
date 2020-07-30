@@ -117,62 +117,6 @@ internal class LexemeMachineImplTest {
     }
 
     @Test
-    fun parseLogicalOperators() {
-        var parser = LexemeMachine.of("!  &&  ||")
-
-        val deny = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
-        val and = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
-        val or = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
-
-        assertEquals(LexemeType.DENY, deny.lexemeType)
-        assertEquals(LexemeType.AND, and.lexemeType)
-        assertEquals(LexemeType.OR, or.lexemeType)
-    }
-
-    @Test
-    fun throwsExceptionIfAndOperatorIsIncomplete() {
-        val parser = LexemeMachine.of("  \n \n     & ")
-        try {
-            parser.peekNextLexeme()
-            assert(false)
-        } catch (e: LexemeParsingException) {
-            assertEquals(3, e.pointer.line)
-            assertEquals(7, e.pointer.column)
-        }
-    }
-
-    @Test
-    fun throwsExceptionIfOrOperatorIsIncomplete() {
-        val parser = LexemeMachine.of("  \n |")
-        try {
-            parser.peekNextLexeme()
-            assert(false)
-        } catch (e: LexemeParsingException) {
-            assertEquals(2, e.pointer.line)
-            assertEquals(3, e.pointer.column)
-        }
-    }
-
-    @Test
-    fun parseComparingOperators() {
-        var parser = LexemeMachine.of(" <   <=  \n\t =   != > >=")
-
-        val lt = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
-        val le = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
-        val eq = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
-        val notEq = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
-        val gt = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
-        val ge = parser.peekNextLexeme().also { parser = parser.movedToNextLexeme() }
-
-        assertEquals(LexemeType.LT, lt.lexemeType)
-        assertEquals(LexemeType.LE, le.lexemeType)
-        assertEquals(LexemeType.EQ, eq.lexemeType)
-        assertEquals(LexemeType.NOT_EQ, notEq.lexemeType)
-        assertEquals(LexemeType.GT, gt.lexemeType)
-        assertEquals(LexemeType.GE, ge.lexemeType)
-    }
-
-    @Test
     fun parseSimpleStrings() {
         val firstString = "first\"String"
         val secondString = "second'String"
