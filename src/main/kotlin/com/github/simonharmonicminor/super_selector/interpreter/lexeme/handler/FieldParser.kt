@@ -8,14 +8,24 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryStat
 
 class FieldParser : LexemeParser {
     override fun parseLexeme(queryState: QueryState): LexemeParsingResult? {
-        if (queryState.currentChar?.isLetter() == true) {
-            val (identifier, afterIdentifierState) = collectCharsWhileConditionTrue(queryState) { _, ch ->
-                ch.isLetter() || ch.isDigit()
+        val ch = queryState.currentChar
+        if (ch?.isLetter() == true || ch == '_') {
+            val (identifier, afterIdentifierState) = collectCharsWhileConditionTrue(queryState) { _, curr ->
+                curr.isLetter() || curr.isDigit() || curr == '_'
             }
             val possibleKeyword = KEYWORDS[identifier.toLowerCase()]
             val lexemeType = possibleKeyword ?: LexemeType.FIELD
             return LexemeParsingResult(
                 lexeme = Lexeme.of(lexemeType, queryState.pointer, identifier),
+                nextState = afterIdentifierState
+            )
+        }
+        if (ch == '`') {
+            val (identifier, afterIdentifierState) = collectCharsWhileConditionTrue(queryState.nextCharState()) { _, curr ->
+                curr != '`'
+            }
+            return LexemeParsingResult(
+                lexeme = Lexeme.of(LexemeType.FIELD, queryState.pointer, identifier),
                 nextState = afterIdentifierState
             )
         }
