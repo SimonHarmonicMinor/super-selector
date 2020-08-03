@@ -4,17 +4,22 @@ import com.github.simonharmonicminor.super_selector.interpreter.lexeme.LexemePar
 import com.github.simonharmonicminor.super_selector.interpreter.lexeme.QueryState
 
 class LexemeParsersContainer(private vararg val parsers: LexemeParser) : LexemeParser {
+
     override fun parseLexeme(queryState: QueryState): LexemeParsingResult? {
-        var localQueryState = queryState
-        while (IGNORED_SYMBOLS.contains(localQueryState.currentChar)) {
-            localQueryState = localQueryState.nextCharState()
-        }
+        val localQueryState = getSkippedIgnoredSymbolsState(queryState)
         for (parser in parsers) {
             val result = parser.parseLexeme(localQueryState)
             if (result != null)
                 return result
         }
         return null
+    }
+
+    private tailrec fun getSkippedIgnoredSymbolsState(queryState: QueryState): QueryState {
+        if (IGNORED_SYMBOLS.contains(queryState.currentChar)) {
+            return getSkippedIgnoredSymbolsState(queryState.nextCharState())
+        }
+        return queryState
     }
 
     companion object {
