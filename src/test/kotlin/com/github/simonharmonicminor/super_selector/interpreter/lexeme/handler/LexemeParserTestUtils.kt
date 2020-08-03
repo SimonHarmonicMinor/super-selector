@@ -19,6 +19,10 @@ object LexemeParserTestUtils {
         return testCharEqualsToLexemeType(lexemeParser, null, *chars)
     }
 
+    fun getQueryStateMock(vararg chars: Char): QueryState {
+        return getQueryStateMock(chars, 0)
+    }
+
     private fun testCharEqualsToLexemeType(
         lexemeParser: LexemeParser,
         lexemeType: LexemeType?,
