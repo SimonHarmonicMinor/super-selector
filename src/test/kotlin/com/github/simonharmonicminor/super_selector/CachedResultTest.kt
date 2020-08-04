@@ -10,17 +10,22 @@ internal class CachedResultTest {
     @Test
     fun invoke() {
         val mockObj = mock(Any::class.java)
-        val func = {
-            mockObj.hashCode()
-            123
+        val func = object : InvokeFunc<Int> {
+            override fun get(): Int {
+                return 123
+            }
         }
 
-        val cachedResult = CachedResult(func)
+        val cachedResult = CachedResult(func::get)
 
         assertEquals(123, cachedResult())
         assertEquals(123, cachedResult())
         assertEquals(123, cachedResult())
         assertEquals(123, cachedResult())
         verify(mockObj, times(1)).hashCode()
+    }
+
+    private interface InvokeFunc<T> {
+        fun get(): T
     }
 }

@@ -13,31 +13,31 @@ internal class LexemeMachineImplTest {
 
     @Test
     fun peekNextLexemeThrowsExceptionIfNoLexemeIsPresent() {
+        val queryState = getQueryStateMock()
+        val lexemeParser = mock<LexemeParser>()
+        val lexemeMachine = LexemeMachineImpl(queryState, lexemeParser)
         assertThrows(LexemeParsingException::class.java) {
-            LexemeMachineImpl(
-                getQueryStateMock(),
-                mock()
-            ).peekNextLexeme()
+            lexemeMachine.peekNextLexeme()
         }
     }
 
     @Test
     fun peekNextLexemeThrowsExceptionIfStuckIntoUnexpectedCharacter() {
+        val queryState = getQueryStateMock('$')
+        val lexemeParser = mock<LexemeParser>()
+        val lexemeMachine = LexemeMachineImpl(queryState, lexemeParser)
         assertThrows(LexemeParsingException::class.java) {
-            LexemeMachineImpl(
-                getQueryStateMock('$'),
-                mock()
-            ).peekNextLexeme()
+            lexemeMachine.peekNextLexeme()
         }
     }
 
     @Test
     fun movedToNextLexemeThrowsExceptionIfNoLexemeIsPresent() {
+        val queryState = getQueryStateMock()
+        val lexemeParser = mock<LexemeParser>()
+        val lexemeMachine = LexemeMachineImpl(queryState, lexemeParser)
         assertThrows(LexemeParsingException::class.java) {
-            LexemeMachineImpl(
-                getQueryStateMock(),
-                mock()
-            ).movedToNextLexeme()
+            lexemeMachine.movedToNextLexeme()
         }
     }
 
