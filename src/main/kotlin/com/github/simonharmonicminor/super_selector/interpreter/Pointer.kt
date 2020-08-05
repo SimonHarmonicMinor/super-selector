@@ -1,6 +1,7 @@
 package com.github.simonharmonicminor.super_selector.interpreter
 
 import com.github.simonharmonicminor.super_selector.PointerException
+import java.util.*
 
 class Pointer(lineIndex: Int, columnIndex: Int) {
     val line: Int
@@ -11,5 +12,16 @@ class Pointer(lineIndex: Int, columnIndex: Int) {
             throw PointerException("The indices should be less than zero. Given: lineIndex=$lineIndex, columnIndex=$columnIndex")
         line = lineIndex + 1
         column = columnIndex + 1
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Pointer) {
+            return other.line == line && other.column == column
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(line, column)
     }
 }

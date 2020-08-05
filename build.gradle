@@ -15,6 +15,11 @@ plugins {
     id "org.sonarqube" version "2.7.1"
 }
 
+jacoco {
+    toolVersion = '0.8.3'
+    reportsDir = file("$buildDir/reports")
+}
+
 apply plugin: 'com.bmuschko.nexus'
 
 group 'com.github.simonharmonicminor'
@@ -29,7 +34,8 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testCompile "org.mockito:mockito-core:2.+"
+    testCompile "org.mockito:mockito-core:2.12.0"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.+"
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
@@ -100,6 +106,6 @@ jacocoTestReport {
 sonarqube {
     properties {
         property "sonar.projectKey", "SimonHarmonicMinor_super-selector"
-        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/test/jacocoTestReport.xml"
     }
 }
