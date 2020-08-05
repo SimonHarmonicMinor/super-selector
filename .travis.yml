@@ -1,4 +1,4 @@
-language: jvm
+language: java
 install: true
 
 addons:
@@ -8,7 +8,7 @@ addons:
       secure: "cA9ge5EF/U6q9L0Jx9Z6brR2wTtytnAIB9jO1/hKRTB+3+BNuNpLL8SBa1k5V87b3nFhae1Ejhw1gkkgreiQ4JqclNKhkgaU+ssQjhKX8pP7opktQJubgQ9CYoB7XEXi+TjV59CEMFsv+SudrOsg+tSGGVpk5ovmfl2l43BAKUhMVjNDMTbLLpZhgSo0HvxaW0PKaMTEpBzXOYyoMAJv7B8zEFkUjv/I/w8CacDO3uwii2jBCI8+6cl6/idB3nsBa6YMbM7zsPB05e2XekYNnK6bMRd25LJEHUzEJoexYL4urddeqOZSi2wORh0eYbguKgoDO0DPlV5lD02EIFwAG0IpE0yQcsOdU7Z0HqLTxSQXEDw1mOIaDzj8CJSolFBkAb9+QoNs5nJrdLpU6g0vP21MMFsMxuuHyllp1wO0Q/se/aNSpX4EqUQ+1ZL3xhYz+N97kDragqHnwpt39bKbX5EyRZBSvFt+ngFL4LzHQn/o38v1//35Rl/OMc323c5Pzvadcu+mQij78SXy0+2HhjrVUSUSuKmzaSlao8z6t41g+C4MRS8BVNQoBOEkSSYAWpGJoLuI5K93ca7mxuuCDwMvKH2W8ehOZhr972mMLmG7P8ioP+1+bgWcz8+AH//vCaamGvqZV/TxkBdlGCfwfmLWtr+gSsLIYVxojlGv378="
 
 script:
-  - "./gradlew clean build jacocoTestReport sonarqube -x signArchives --debug --stacktrace"
+  - "./gradlew clean build jacocoTestReport sonarqube -x signArchives"
 
 branches:
   only:
