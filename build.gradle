@@ -106,6 +106,6 @@ jacocoTestReport {
 sonarqube {
     properties {
         property "sonar.projectKey", "SimonHarmonicMinor_super-selector"
-        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/test/jacocoTestReport.xml"
     }
 }
