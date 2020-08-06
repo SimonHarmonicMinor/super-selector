@@ -5,6 +5,8 @@ import com.github.simonharmonicminor.super_selector.interpreter.Pointer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class LexemeMachineIntegrationTest {
     @Test
@@ -65,5 +67,20 @@ class LexemeMachineIntegrationTest {
 
         assertEquals(LexemeType.NOT_EQ, notEq.lexemeType)
         assertEquals(Pointer(4, 6), notEq.pointer)
+    }
+
+    @Test
+    fun parseDate() {
+        var lexemeMachine = LexemeMachine.of("   @21.12.2018@ \n \r\t   @12.08.1998 12:00:34@ ")
+        val date = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val dateTime = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+
+        assertEquals(LexemeType.LOCAL_DATE_TIME, date.lexemeType)
+        assertEquals(Pointer(0, 3), date.pointer)
+        assertEquals(LocalDate.of(2018, 12, 21), (date.value as LocalDateTime).toLocalDate())
+
+        assertEquals(LexemeType.LOCAL_DATE_TIME, dateTime.lexemeType)
+        assertEquals(Pointer(1, 6), dateTime.pointer)
+        assertEquals(LocalDateTime.of(1998, 8, 12, 12, 0, 34), dateTime.value)
     }
 }
