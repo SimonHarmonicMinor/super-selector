@@ -13,9 +13,12 @@ class LexemeMachineIntegrationTest {
     fun parseBrackets() {
         var lexemeMachine = LexemeMachine.of("( )  \n\r \t ] [")
         val leftRoundBracket = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
-        val rightRoundBracket = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
-        val rightSquareBracket = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
-        val leftSquareBracket = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val rightRoundBracket =
+            lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val rightSquareBracket =
+            lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val leftSquareBracket =
+            lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
 
         assertEquals(LexemeType.LEFT_ROUND_BRACKET, leftRoundBracket.lexemeType)
         assertEquals(Pointer(0, 0), leftRoundBracket.pointer)
@@ -82,5 +85,44 @@ class LexemeMachineIntegrationTest {
         assertEquals(LexemeType.LOCAL_DATE_TIME, dateTime.lexemeType)
         assertEquals(Pointer(1, 6), dateTime.pointer)
         assertEquals(LocalDateTime.of(1998, 8, 12, 12, 0, 34), dateTime.value)
+
+        assertThrows<LexemeParsingException> { lexemeMachine.peekNextLexeme() }
+    }
+
+    @Test
+    fun parseFields() {
+        var lexemeMachine = LexemeMachine.of(" rtr ___ _underScore12_  \n another_under_score \n\n `select` `where` ")
+        val field1 = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val field2 = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val field3 = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val field4 = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val field5 = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val field6 = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+
+        assertEquals(LexemeType.FIELD, field1.lexemeType)
+        assertEquals(Pointer(0, 1), field1.pointer)
+        assertEquals("rtr", field1.value)
+
+        assertEquals(LexemeType.FIELD, field2.lexemeType)
+        assertEquals(Pointer(0, 5), field2.pointer)
+        assertEquals("___", field2.value)
+
+        assertEquals(LexemeType.FIELD, field3.lexemeType)
+        assertEquals(Pointer(0, 9), field3.pointer)
+        assertEquals("_underScore12_", field3.value)
+
+        assertEquals(LexemeType.FIELD, field4.lexemeType)
+        assertEquals(Pointer(1, 1), field4.pointer)
+        assertEquals("another_under_score", field4.value)
+
+        assertEquals(LexemeType.FIELD, field5.lexemeType)
+        assertEquals(Pointer(3, 1), field5.pointer)
+        assertEquals("select", field5.value)
+
+        assertEquals(LexemeType.FIELD, field6.lexemeType)
+        assertEquals(Pointer(3, 10), field6.pointer)
+        assertEquals("where", field6.value)
+
+        assertThrows<LexemeParsingException> { lexemeMachine.peekNextLexeme() }
     }
 }
