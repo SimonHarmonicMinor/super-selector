@@ -8,13 +8,13 @@ internal class QueryStateImplTest {
 
     @Test
     fun ifQueryIsEmptyCurrentCharIsNull() {
-        val queryState = QueryStateImpl("")
+        val queryState = QueryStateImpl.of("")
         assertNull(queryState.currentChar)
     }
 
     @Test
     fun returnsExpectedCharacters() {
-        var queryState: QueryState = QueryStateImpl("abcd fg")
+        var queryState: QueryState = QueryStateImpl.of("abcd fg")
         val a = queryState.currentChar.also { queryState = queryState.nextCharState() }
         val b = queryState.currentChar.also { queryState = queryState.nextCharState() }
         val c = queryState.currentChar.also { queryState = queryState.nextCharState() }
@@ -37,7 +37,7 @@ internal class QueryStateImplTest {
 
     @Test
     fun queryStatePointsToTheRightPosition() {
-        var queryState: QueryState = QueryStateImpl("ab \n cd  \t \nef")
+        var queryState: QueryState = QueryStateImpl.of("ab \n cd  \t \nef")
         val aState = queryState.also { queryState = queryState.nextCharState() }
         val bState = queryState.also {
             queryState = queryState.nextCharState()
@@ -78,5 +78,25 @@ internal class QueryStateImplTest {
         assertEquals('f', fState.currentChar)
         assertEquals(3, fState.pointer.line)
         assertEquals(2, fState.pointer.column)
+    }
+
+    @Test
+    fun skipsEmptyLines() {
+        var queryState: QueryState = QueryStateImpl.of("\n\n\nrt\n\ny")
+        val rState = queryState.also { queryState = queryState.nextCharState() }
+        val tState = queryState.also { queryState = queryState.nextCharState() }
+        val yState = queryState.also { queryState = queryState.nextCharState() }
+
+        assertEquals('r', rState.currentChar)
+        assertEquals(4, rState.pointer.line)
+        assertEquals(1, rState.pointer.column)
+
+        assertEquals('t', tState.currentChar)
+        assertEquals(4, tState.pointer.line)
+        assertEquals(2, tState.pointer.column)
+
+        assertEquals('y', yState.currentChar)
+        assertEquals(6, yState.pointer.line)
+        assertEquals(1, yState.pointer.column)
     }
 }

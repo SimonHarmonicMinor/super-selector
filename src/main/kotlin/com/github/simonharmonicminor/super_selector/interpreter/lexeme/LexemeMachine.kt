@@ -24,7 +24,7 @@ interface LexemeMachine {
     companion object {
         fun of(query: String): LexemeMachine =
             LexemeMachineImpl(
-                QueryStateImpl(query),
+                QueryStateImpl.of(query),
                 LexemeParsersContainer(
                     NumberParser(),
                     BracketsParser(),
