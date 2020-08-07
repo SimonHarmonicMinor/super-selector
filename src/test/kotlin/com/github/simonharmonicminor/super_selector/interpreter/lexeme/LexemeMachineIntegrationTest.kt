@@ -198,6 +198,33 @@ class LexemeMachineIntegrationTest {
         parseFails(" --123  ")
     }
 
+    @Test
+    fun parseStrings() {
+        var lexemeMachine = LexemeMachine.of(" \"str1\"  \n\n  'str2' ")
+        val doubleQuotedString = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val singleQuotedString = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+
+        assertEquals(LexemeType.STRING, doubleQuotedString.lexemeType)
+        assertEquals(1, doubleQuotedString.pointer.line)
+        assertEquals(2, doubleQuotedString.pointer.column)
+        assertEquals("str1", doubleQuotedString.value)
+
+        assertEquals(LexemeType.STRING, singleQuotedString.lexemeType)
+        assertEquals(3, singleQuotedString.pointer.line)
+        assertEquals(3, singleQuotedString.pointer.column)
+        assertEquals("str2", singleQuotedString.value)
+    }
+
+    @Test
+    fun parseSingleQuotedStringFails() {
+        parseFails("  'dasdasf ")
+    }
+
+    @Test
+    fun parseDoubleQuotedStringFails() {
+        parseFails("  \"bfbg ")
+    }
+
     private fun parseFails(query: String) {
         assertThrows<LexemeParsingException> {
             LexemeMachine.of(query).peekNextLexeme()
