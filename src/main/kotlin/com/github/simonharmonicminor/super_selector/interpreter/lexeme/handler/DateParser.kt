@@ -30,7 +30,7 @@ class DateParser : LexemeParser {
                     pointer = queryState.pointer,
                     value = dateObj
                 ),
-                nextState = nextState
+                nextState = nextState.nextCharState()
             )
         }
         return null

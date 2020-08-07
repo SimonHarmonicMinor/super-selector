@@ -19,6 +19,12 @@ class NumberParser : LexemeParser {
                 else
                     Pair(1, queryState)
             val (decimalPart, dotQueryState) = collectCharsWhileConditionTrue(nextState, digitsCollectingCondition)
+            if (decimalPart.isEmpty()) {
+                throw LexemeParsingException(
+                    queryState = nextState,
+                    message = "Number's decimal part should not be empty"
+                )
+            }
             if (dotQueryState.currentChar != '.') {
                 return LexemeParsingResult(
                     lexeme = Lexeme.of(LexemeType.DECIMAL, queryState.pointer, decimalPart.toLong() * sign),

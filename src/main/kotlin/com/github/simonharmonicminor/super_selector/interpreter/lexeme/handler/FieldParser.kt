@@ -26,7 +26,7 @@ class FieldParser : LexemeParser {
             }
             return LexemeParsingResult(
                 lexeme = Lexeme.of(LexemeType.FIELD, queryState.pointer, identifier),
-                nextState = afterIdentifierState
+                nextState = afterIdentifierState.nextCharState()
             )
         }
         return null
