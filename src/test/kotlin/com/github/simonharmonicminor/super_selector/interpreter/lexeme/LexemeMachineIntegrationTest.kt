@@ -153,6 +153,51 @@ class LexemeMachineIntegrationTest {
         parseFails(" &  ")
     }
 
+    @Test
+    fun parseNumbers() {
+        var lexemeMachine = LexemeMachine.of("\n1002  \n\t\r 9231.342 \n -123 -98.023 \n \n 0")
+        val firstNumber = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val secondNumber = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val thirdNumber = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val fourthNumber = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val fifthNumber = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+
+        assertEquals(LexemeType.DECIMAL, firstNumber.lexemeType)
+        assertEquals(2, firstNumber.pointer.line)
+        assertEquals(1, firstNumber.pointer.column)
+        assertEquals(1002L, firstNumber.value)
+
+        assertEquals(LexemeType.DOUBLE, secondNumber.lexemeType)
+        assertEquals(3, secondNumber.pointer.line)
+        assertEquals(4, secondNumber.pointer.column)
+        assertEquals(9231.342, secondNumber.value)
+
+        assertEquals(LexemeType.DECIMAL, thirdNumber.lexemeType)
+        assertEquals(4, thirdNumber.pointer.line)
+        assertEquals(2, thirdNumber.pointer.column)
+        assertEquals(-123L, thirdNumber.value)
+
+        assertEquals(LexemeType.DOUBLE, fourthNumber.lexemeType)
+        assertEquals(4, fourthNumber.pointer.line)
+        assertEquals(7, fourthNumber.pointer.column)
+        assertEquals(-98.023, fourthNumber.value)
+
+        assertEquals(LexemeType.DECIMAL, fifthNumber.lexemeType)
+        assertEquals(6, fifthNumber.pointer.line)
+        assertEquals(2, fifthNumber.pointer.column)
+        assertEquals(0L, fifthNumber.value)
+    }
+
+    @Test
+    fun parseDoubleFails() {
+        parseFails("  454. ")
+    }
+
+    @Test
+    fun parseNegativeDecimalFails() {
+        parseFails(" --123  ")
+    }
+
     private fun parseFails(query: String) {
         assertThrows<LexemeParsingException> {
             LexemeMachine.of(query).peekNextLexeme()
