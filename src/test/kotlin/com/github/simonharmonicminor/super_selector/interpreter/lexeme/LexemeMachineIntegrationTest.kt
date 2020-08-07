@@ -125,4 +125,37 @@ class LexemeMachineIntegrationTest {
 
         assertThrows<LexemeParsingException> { lexemeMachine.peekNextLexeme() }
     }
+
+    @Test
+    fun parseLogicalOperators() {
+        var lexemeMachine = LexemeMachine.of("  \n\n &&   \n||  ")
+        val and = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+        val or = lexemeMachine.peekNextLexeme().also { lexemeMachine = lexemeMachine.movedToNextLexeme() }
+
+        assertEquals(LexemeType.AND, and.lexemeType)
+        assertEquals(3, and.pointer.line)
+        assertEquals(2, and.pointer.column)
+
+        assertEquals(LexemeType.OR, or.lexemeType)
+        assertEquals(4, or.pointer.line)
+        assertEquals(1, or.pointer.column)
+
+        assertThrows<LexemeParsingException> { lexemeMachine.peekNextLexeme() }
+    }
+
+    @Test
+    fun parseOrOperatorFails() {
+        parseFails("  | ")
+    }
+
+    @Test
+    fun parseAndOperatorFails() {
+        parseFails(" &  ")
+    }
+
+    private fun parseFails(query: String) {
+        assertThrows<LexemeParsingException> {
+            LexemeMachine.of(query).peekNextLexeme()
+        }
+    }
 }
