@@ -26,14 +26,14 @@ for various databases and data keepers.
 Maven:
 ```xml
 <dependency>
-    <groupId>com.github.simonharmonicminor</groupId>
+    <groupId>com.kirekov</groupId>
     <artifactId>super-selector</artifactId>
 </dependency>
 ```
 
 Gradle:
 ```groovy
-implementation 'com.github.simonharmonicminor:super-selector'
+implementation 'com.kirekov:super-selector'
 ```
 
 ## Status
