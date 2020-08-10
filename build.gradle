@@ -22,7 +22,7 @@ jacoco {
 
 apply plugin: 'com.bmuschko.nexus'
 
-group 'com.github.simonharmonicminor'
+group 'com.kirekov'
 version 'DEV-SNAPSHOT'
 description 'Universal expression builder from SQL-like query text'
 
