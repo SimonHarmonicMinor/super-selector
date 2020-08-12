@@ -1,5 +1,8 @@
 # Super Selector
 
+> :warning: **The library is not stable yet.** The api shall be changed in the future.
+> It recommends to wait until **v1.0.0** release
+
 ## Universal Expression Builder from SQL-like Query Text
 The interpreter parses the given query string and produces an object that
 defines rules of filtering and selection. It can be used as an adapter
@@ -42,6 +45,14 @@ implementation 'com.kirekov:super-selector'
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=SimonHarmonicMinor_super-selector&metric=coverage)](https://sonarcloud.io/dashboard?id=SimonHarmonicMinor_super-selector)
 
 ## Basic Usage
+
+> :warning: **This feature has not been implemented yet**
+
+```kotlin
+val query: String = ...
+val parsedQuery: ParsedQuery = QueryParser.new().parse(query)
+```
+
 Here is the simple approach.
 
 ```sql
