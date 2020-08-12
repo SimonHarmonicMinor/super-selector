@@ -9,11 +9,15 @@ import com.kirekov.super_selector.ExpressionEvaluationException
  *
  * [evaluate] - evaluates the expression for the given record
  *
- * @see JoiningType
  * @see Record
  */
 sealed class Expression {
     abstract val children: List<Expression>
+
+    /**
+     * Returns new expression that has a reversed condition
+     */
+    abstract fun not(): Expression
 
     /**
      * Evaluates the given record for the expression and all its children.
@@ -25,12 +29,41 @@ sealed class Expression {
     abstract fun evaluate(record: Record): Boolean
 }
 
-class AndExpression(override val children: List<Expression>) : Expression() {
-    override fun evaluate(record: Record) = children.all { it.evaluate(record) }
+class AndExpression private constructor(override val children: List<Expression>,
+                                        private val negative: Boolean) : Expression() {
+    companion object {
+        fun new(children: List<Expression>) = AndExpression(children, false)
+        fun newNot(children: List<Expression>) = AndExpression(children, true)
+    }
+
+    override fun evaluate(record: Record): Boolean {
+        val res = children.all { it.evaluate(record) }
+        return if (negative) !res else res
+    }
+
+    override fun not() = AndExpression(
+            children,
+            !negative
+    )
+
 }
 
-class OrExpression(override val children: List<Expression>) : Expression() {
-    override fun evaluate(record: Record) = children.any { it.evaluate(record) }
+class OrExpression private constructor(override val children: List<Expression>,
+                                       private val negative: Boolean) : Expression() {
+    companion object {
+        fun new(children: List<Expression>) = OrExpression(children, false)
+        fun newNot(children: List<Expression>) = OrExpression(children, true)
+    }
+
+    override fun evaluate(record: Record): Boolean {
+        val res = children.any { it.evaluate(record) }
+        return if (negative) !res else res
+    }
+
+    override fun not() = OrExpression(
+            children,
+            !negative
+    )
 }
 
 /**
