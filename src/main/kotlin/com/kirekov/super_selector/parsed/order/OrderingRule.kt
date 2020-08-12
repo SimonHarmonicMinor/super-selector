@@ -1,4 +1,4 @@
-package com.kirekov.super_selector.order
+package com.kirekov.super_selector.parsed.order
 
 /**
  * Defines the ordering rule

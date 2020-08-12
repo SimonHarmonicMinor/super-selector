@@ -1,6 +1,6 @@
 package com.kirekov.super_selector.parsed
 
-import com.kirekov.super_selector.order.OrderingRule
+import com.kirekov.super_selector.parsed.order.OrderingRule
 
 
 /**
