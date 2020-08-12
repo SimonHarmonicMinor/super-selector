@@ -36,3 +36,6 @@ class QueryParsingException : RuntimeException {
         this.pointer = pointer
     }
 }
+
+class ExpressionEvaluationException(message: String)
+    : RuntimeException(message)
